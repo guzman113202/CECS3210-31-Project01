@@ -1,0 +1,176 @@
+#null = None , this comment is in order to fix an error, it was an attempt in vain
+
+import random
+from HangmanWordList import listOfWords
+
+
+#function that retieves the randomly selected word and stores it for usage in game, accompanied by a word file
+#dubbed "HangmanWordList".
+def get_word():
+    word = randomW(HangmanWordList)
+    return word.upper()
+
+
+#line for displaying the characters of a word without giving away tis composition, i included a space after the _ to
+#facilitate the players counting of the letters, hopefully when replaced the space will be eliminated, if not, fix.
+def play(word):
+    word_progression = "_ " * len(word)
+    
+    #this stores all values already input and incorrect, so as to adhere to the rules of the game
+    guessed = False
+    guessed_letters = []
+    guessed_words = []
+    tries = 6
+    
+    Print("            Hangman Game")
+    Print("    by Jose Guzman Seda | 113202")
+    Print("Special credits to many youtube videos")
+    #will inlcude links to videos online in comments near the bottom of the script!
+    
+    #displays the hangman and word "shell" for the user to then input their guess.
+    print(display_hangman(tries))
+    print(word_progression)
+    print("\n")
+    
+    #this function allows you to guess either a word or letter, and also displays an incorrect message for incorrect guesses
+    while not guessed and tries > 0:
+        guess = input("Input guess for letter or word: ").upper()
+        
+        #guess for letter vvv
+        if len(guess) == 1 and guess.isalpha():
+            if guess in guessed_letters:
+                print("Error: guess already made, please retry.", guess)
+            elif guess not in word:
+                print(guess, "is not in the word, retry.")
+                tries -= 1
+                guessed_letters.append(guess)
+            else:
+                print("Great! ", guess, "is part of the word!")
+                guessed_letters.append(guess)
+                word_as_list = list(word_progression)
+                indices = [i for i, letter in enumerate(word) if letter == guess]
+                for index in indices:
+                    word_as_list[index] = guess
+                word_progression = "".join(word_as_list)
+                if "_" not in word_progression:
+                    guess = True
+                
+        #guess for word vvv
+        elif len(guess) == len(word) and guess.isalpha():
+            if guess in guessed_words:
+                print("Error: guess already made, please retry", guess)
+            elif guess != word:
+                print(guess, "is not the word, retry.")
+                tries -= 1
+                guessed_words.append(guess)
+            else:
+                guessed = True
+                word_progression = word
+        else:
+            print("Sorry, your guess was invalid.")
+        print(display_hangman(tries))
+        print(word_progression)
+        print("\n")
+    if guessed:
+        print("Congratulations, you have won the game, thanks for playing!")
+    else:
+        print("Sorry but you have been hung for your lack of knowledge, try again!")
+        print("\n")
+        print("The word was " + word + ". Better luck next time!")
+    
+    
+    
+#this is the display image for the hangman game, as the number of failed attemt increases the display changes for the 
+#corresponding hangman
+def display_hangman(tries):
+    stages = ["""
+                --------
+                |      |
+                |      O
+                |     \\|/
+                |      |
+                |      |
+                |     / \\
+                -
+                """,
+                """
+                --------
+                |      |
+                |      O
+                |     \\|/
+                |      |
+                |      |
+                |     / 
+                -              
+                
+                """,
+                """
+                --------
+                |      |
+                |      O
+                |     \\|/
+                |      |
+                |      
+                |     
+                -
+                
+               """,
+               """
+                --------
+                |      |
+                |      O
+                |     \\|
+                |      |
+                |      
+                |     
+                -
+               
+               """,
+               """
+                --------
+                |      |
+                |      O
+                |      |
+                |      |
+                |      
+                |     
+                -
+                
+               """,
+               """
+                --------
+                |      |
+                |      O
+                |     
+                |      
+                |      
+                |
+                -
+               """,
+               """
+                --------
+                |      |
+                |      
+                |    
+                |      
+                |     
+                | 
+                -
+               """
+    
+    
+    
+    
+    ]
+    return stages[tries]
+
+    
+    
+def main():
+    word = get_word()
+    play(word)
+    while input("Play again? 1=yes, 0=no (1/0)"). upper() == "1":
+        word = get_word()
+        play(word)
+        
+    
